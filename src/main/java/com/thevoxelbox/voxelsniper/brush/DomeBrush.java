@@ -88,10 +88,10 @@ public class DomeBrush extends Brush
         for (final Vector vector : changeablePositions)
         {
             final Block currentTargetBlock = vector.toLocation(this.getTargetBlock().getWorld()).getBlock();
-            if (currentTargetBlock.getTypeId() != v.getVoxelId() || currentTargetBlock.getData() != v.getData())
+            if (currentTargetBlock.getType() != v.getVoxelId() || currentTargetBlock.getBlockData() != v.getData())
             {
                 undo.put(currentTargetBlock);
-                currentTargetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
+                currentTargetBlock.setBlockData(v.getData(), true);
             }
         }
 

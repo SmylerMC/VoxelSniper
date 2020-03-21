@@ -7,7 +7,9 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  *
@@ -19,11 +21,11 @@ public class StampBrush extends Brush
      */
     protected class BlockWrapper
     {
-        public int id;
+        public Material id;
         public int x;
         public int y;
         public int z;
-        public byte d;
+        public BlockData d;
 
         /**
          * @param b
@@ -34,8 +36,8 @@ public class StampBrush extends Brush
         @SuppressWarnings("deprecation")
 		public BlockWrapper(final Block b, final int blx, final int bly, final int blz)
         {
-            this.id = b.getTypeId();
-            this.d = b.getData();
+            this.id = b.getType();
+            this.d = b.getBlockData();
             this.x = blx;
             this.y = bly;
             this.z = blz;
@@ -133,8 +135,8 @@ public class StampBrush extends Brush
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
         this.undo.put(block);
-        block.setTypeId(cb.id);
-        block.setData(cb.d);
+        block.setType(cb.id);
+        block.setBlockData(cb.d);
     }
 
     /**
@@ -144,11 +146,11 @@ public class StampBrush extends Brush
 	protected final void setBlockFill(final BlockWrapper cb)
     {
         final Block block = this.clampY(this.getTargetBlock().getX() + cb.x, this.getTargetBlock().getY() + cb.y, this.getTargetBlock().getZ() + cb.z);
-        if (block.getTypeId() == 0)
+        if (block.getType() == Material.AIR)
         {
             this.undo.put(block);
-            block.setTypeId(cb.id);
-            block.setData(cb.d);
+            block.setType(cb.id);
+            block.setBlockData(cb.d);
         }
     }
 

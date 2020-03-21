@@ -7,6 +7,7 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
@@ -16,7 +17,7 @@ public class pExcludeMat extends vPerformer
 {
 
     private VoxelList excludeList;
-    private int id;
+    private Material id;
 
     public pExcludeMat()
     {
@@ -43,10 +44,10 @@ public class pExcludeMat extends vPerformer
 	@Override
     public void perform(Block b)
     {
-        if (!excludeList.contains(new int[] {b.getTypeId(), b.getData()}))
+        if (!excludeList.contains(new int[] {b.getType(), b.getData()}))
         {
             h.put(b);
-            b.setTypeId(id);
+            b.setType(id, false);
         }
     }
 }

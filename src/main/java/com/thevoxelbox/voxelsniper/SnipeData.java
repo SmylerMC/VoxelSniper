@@ -12,13 +12,13 @@ import org.bukkit.block.data.BlockData;
 public class SnipeData
 {
 
-    public static final int DEFAULT_REPLACE_DATA_VALUE = 0;
+    public static final BlockData DEFAULT_REPLACE_DATA_VALUE = null;
     public static final int DEFAULT_CYLINDER_CENTER = 0;
     public static final int DEFAULT_VOXEL_HEIGHT = 1;
     public static final int DEFAULT_BRUSH_SIZE = 3;
-    public static final int DEFAULT_DATA_VALUE = 0;
-    public static final int DEFAULT_REPLACE_ID = 0;
-    public static final int DEFAULT_VOXEL_ID = 0;
+    public static final BlockData DEFAULT_DATA_VALUE = null;
+    public static final Material DEFAULT_REPLACE_ID = Material.AIR;
+    public static final Material DEFAULT_VOXEL_ID = Material.AIR;
 
     private final Sniper owner;
     private Message voxelMessage;
@@ -30,22 +30,22 @@ public class SnipeData
      * Voxel Id -- set blockPositionY /v (#,name).
      */
     @Deprecated
-    private int voxelId = SnipeData.DEFAULT_VOXEL_ID;
+    private Material voxelId = SnipeData.DEFAULT_VOXEL_ID;
     /**
      * Voxel Replace Id -- set blockPositionY /vr #.
      */
     @Deprecated
-    private int replaceId = SnipeData.DEFAULT_REPLACE_ID;
+    private Material replaceId = SnipeData.DEFAULT_REPLACE_ID;
     /**
      * Voxel 'ink' -- set blockPositionY /vi #.
      */
     @Deprecated
-    private byte data = SnipeData.DEFAULT_DATA_VALUE;
+    private BlockData data = SnipeData.DEFAULT_DATA_VALUE;
     /**
      * Voxel 'ink' Replace -- set blockPositionY /vir #.
      */
     @Deprecated
-    private byte replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
+    private BlockData replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
     /**
      * Voxel List of ID's -- set blockPositionY /vl # # # -#.
      */
@@ -91,7 +91,7 @@ public class SnipeData
      * @return the data
      */
     @Deprecated
-    public final byte getData()
+    public final BlockData getData()
     {
         return this.data;
     }
@@ -100,7 +100,7 @@ public class SnipeData
      * @return the replaceData
      */
     @Deprecated
-    public final byte getReplaceData()
+    public final BlockData getReplaceData()
     {
         return this.replaceData;
     }
@@ -109,7 +109,7 @@ public class SnipeData
      * @return the replaceId
      */
     @Deprecated
-    public final int getReplaceId()
+    public final Material getReplaceId()
     {
         return this.replaceId;
     }
@@ -126,7 +126,7 @@ public class SnipeData
      * @return the voxelId
      */
     @Deprecated
-    public final int getVoxelId()
+    public final Material getVoxelId()
     {
         return this.voxelId;
     }
@@ -208,7 +208,7 @@ public class SnipeData
      * @param data
      *         the data to set
      */
-    public final void setData(final byte data)
+    public final void setData(final BlockData data)
     {
         this.data = data;
     }
@@ -217,7 +217,7 @@ public class SnipeData
      * @param replaceData
      *         the replaceData to set
      */
-    public final void setReplaceData(final byte replaceData)
+    public final void setReplaceData(final BlockData replaceData)
     {
         this.replaceData = replaceData;
     }
@@ -226,7 +226,7 @@ public class SnipeData
      * @param replaceId
      *         the replaceId to set
      */
-    public final void setReplaceId(final int replaceId)
+    public final void setReplaceId(final Material replaceId)
     {
         this.replaceId = replaceId;
     }
@@ -244,7 +244,7 @@ public class SnipeData
      * @param voxelId
      *         the voxelId to set
      */
-    public final void setVoxelId(final int voxelId)
+    public final void setVoxelId(final Material voxelId)
     {
         this.voxelId = voxelId;
     }

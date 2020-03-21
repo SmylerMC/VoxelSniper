@@ -28,7 +28,7 @@ public class VoxelListCommand extends VoxelCommand
         {
             final RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(player, player.getWorld());
             final Block targetBlock = rangeBlockHelper.getTargetBlock();
-            snipeData.getVoxelList().add(new int[]{ targetBlock.getTypeId(), targetBlock.getData() });
+            snipeData.getVoxelList().add(new int[]{ targetBlock.getType(), targetBlock.getData() });
             snipeData.getVoxelMessage().voxelList();
             return true;
         }

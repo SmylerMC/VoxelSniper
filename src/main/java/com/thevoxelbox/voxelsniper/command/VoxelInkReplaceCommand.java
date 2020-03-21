@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
 public class VoxelInkReplaceCommand extends VoxelCommand
@@ -22,14 +23,14 @@ public class VoxelInkReplaceCommand extends VoxelCommand
     {
         Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
 
-        byte dataValue;
+        BlockData dataValue;
 
         if (args.length == 0)
         {
             Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
             if (targetBlock != null)
             {
-                dataValue = targetBlock.getData();
+                dataValue = targetBlock.getBlockData();
             }
             else
             {

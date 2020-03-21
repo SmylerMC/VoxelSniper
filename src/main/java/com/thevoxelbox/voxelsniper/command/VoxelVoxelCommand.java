@@ -35,7 +35,7 @@ public class VoxelVoxelCommand extends VoxelCommand
                     player.sendMessage("You are not allowed to use " + targetBlock.getType().name() + ".");
                     return true;
                 }
-                snipeData.setVoxelId(targetBlock.getTypeId());
+                snipeData.setVoxelId(targetBlock.getType());
                 snipeData.getVoxelMessage().voxel();
             }
             return true;
@@ -49,7 +49,7 @@ public class VoxelVoxelCommand extends VoxelCommand
                 player.sendMessage("You are not allowed to use " + material.name() + ".");
                 return true;
             }
-            snipeData.setVoxelId(material.getId());
+            snipeData.setVoxelId(material);
             snipeData.getVoxelMessage().voxel();
             return true;
         }

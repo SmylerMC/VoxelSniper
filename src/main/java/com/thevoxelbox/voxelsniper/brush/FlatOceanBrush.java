@@ -43,7 +43,7 @@ public class FlatOceanBrush extends Brush
                     }
                     else
                     {
-                        chunk.getBlock(x, y, z).setTypeId(Material.AIR.getId(), false);
+                        chunk.getBlock(x, y, z).setType(Material.AIR, false);
                     }
                 }
             }

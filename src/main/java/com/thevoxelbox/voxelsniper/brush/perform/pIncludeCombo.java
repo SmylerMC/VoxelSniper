@@ -7,7 +7,9 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.util.VoxelList;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
@@ -16,8 +18,8 @@ public class pIncludeCombo extends vPerformer
 {
 
     private VoxelList includeList;
-    private int id;
-    private byte data;
+    private Material id;
+    private BlockData data;
 
     public pIncludeCombo()
     {
@@ -46,10 +48,10 @@ public class pIncludeCombo extends vPerformer
 	@Override
     public void perform(Block b)
     {
-        if (includeList.contains(new int[] {b.getTypeId(), b.getData()}))
+        if (includeList.contains(new int[] {b.getType(), b.getData()}))
         {
             h.put(b);
-            b.setTypeIdAndData(id, data, true);
+            b.setBlockData(data, true);
         }
     }
 }

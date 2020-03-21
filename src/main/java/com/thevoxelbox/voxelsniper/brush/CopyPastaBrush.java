@@ -61,8 +61,8 @@ public class CopyPastaBrush extends Brush
                     for (int k = 0; k < this.arraySize[2]; k++)
                     {
                         final int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
-                        this.blockArray[currentPosition] = this.getWorld().getBlockTypeIdAt(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
-                        this.dataArray[currentPosition] = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k).getData();
+                        this.blockArray[currentPosition] = this.getWorld().getBlockAt(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k).getType();
+                        this.dataArray[currentPosition] = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k).getBlockData();
                     }
                 }
             }
@@ -107,11 +107,11 @@ public class CopyPastaBrush extends Brush
 
                     if (!(this.blockArray[currentPosition] == 0 && !this.pasteAir))
                     {
-                        if (block.getTypeId() != this.blockArray[currentPosition] || block.getData() != this.dataArray[currentPosition])
+                        if (block.getType() != this.blockArray[currentPosition] || block.getData() != this.dataArray[currentPosition])
                         {
                             undo.put(block);
                         }
-                        block.setTypeIdAndData(this.blockArray[currentPosition], this.dataArray[currentPosition], true);
+                        block.setBlockData(this.dataArray[currentPosition], true);
                     }
                 }
             }
