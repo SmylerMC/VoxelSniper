@@ -283,10 +283,6 @@ public class Sniper
                 }
 
                 boolean result = sniperTool.getCurrentBrush().perform(snipeAction, snipeData, targetBlock, lastBlock);
-                if (result)
-                {
-                    MetricsManager.increaseBrushUsage(sniperTool.getCurrentBrush().getName());
-                }
                 return result;
             }
         }
