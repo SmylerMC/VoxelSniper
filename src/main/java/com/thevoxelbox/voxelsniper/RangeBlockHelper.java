@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -11,7 +14,6 @@ import org.bukkit.entity.Player;
 public class RangeBlockHelper
 {
 
-    private static final int MAXIMUM_WORLD_HEIGHT = 255;
     private static final double DEFAULT_PLAYER_VIEW_HEIGHT = 1.65;
     private static final double DEFAULT_LOCATION_VIEW_HEIGHT = 0;
     private static final double DEFAULT_STEP = 0.2;
@@ -25,41 +27,8 @@ public class RangeBlockHelper
     private int lastX, lastY, lastZ;
     private int targetX, targetY, targetZ;
     private World world;
-
-    /**
-     * Constructor requiring location, uses default values.
-     *
-     * @param location
-     */
-    public RangeBlockHelper(final Location location)
-    {
-        this.init(location, RangeBlockHelper.DEFAULT_RANGE, RangeBlockHelper.DEFAULT_STEP, RangeBlockHelper.DEFAULT_LOCATION_VIEW_HEIGHT);
-    }
-
-    /**
-     * Constructor requiring location, max range, and a stepping value.
-     *
-     * @param location
-     * @param range
-     * @param step
-     */
-    public RangeBlockHelper(final Location location, final int range, final double step)
-    {
-        this.world = location.getWorld();
-        this.init(location, range, step, RangeBlockHelper.DEFAULT_LOCATION_VIEW_HEIGHT);
-    }
-
-    /**
-     * Constructor requiring player, max range, and a stepping value.
-     *
-     * @param player
-     * @param range
-     * @param step
-     */
-    public RangeBlockHelper(final Player player, final int range, final double step)
-    {
-        this.init(player.getLocation(), range, step, RangeBlockHelper.DEFAULT_PLAYER_VIEW_HEIGHT);
-    }
+    private int maxWorldY;
+    private int minWorldY;
 
     /**
      * Constructor requiring player, uses default values.
@@ -91,9 +60,9 @@ public class RangeBlockHelper
      */
     public final void fromOffworld()
     {
-        if (this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT)
+        if (this.targetY > this.maxWorldY)
         {
-            while (this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT && this.length <= this.range)
+            while (this.targetY > this.maxWorldY && this.length <= this.range)
             {
                 this.lastX = this.targetX;
                 this.lastY = this.targetY;
@@ -116,9 +85,9 @@ public class RangeBlockHelper
                 while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
             }
         }
-        else if (this.targetY < 0)
+        else if (this.targetY < this.minWorldY)
         {
-            while (this.targetY < 0 && this.length <= this.range)
+            while (this.targetY < this.minWorldY && this.length <= this.range)
             {
                 this.lastX = this.targetX;
                 this.lastY = this.targetY;
@@ -150,7 +119,7 @@ public class RangeBlockHelper
      */
     public final Block getCurBlock()
     {
-        if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0)
+        if (this.length > this.range || this.targetY > this.maxWorldY || this.targetY < this.minWorldY)
         {
             return null;
         }
@@ -189,7 +158,7 @@ public class RangeBlockHelper
      */
     public final Block getLastBlock()
     {
-        if (this.lastY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.lastY < 0)
+        if (this.lastY > this.maxWorldY || this.lastY < this.minWorldY)
         {
             return null;
         }
@@ -223,7 +192,7 @@ public class RangeBlockHelper
         }
         while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
 
-        if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0)
+        if (this.length > this.range || this.targetY > this.maxWorldY || this.targetY < this.minWorldY)
         {
             return null;
         }
@@ -355,7 +324,7 @@ public class RangeBlockHelper
             return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
         }
 
-        if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0)
+        if (this.length > this.range || this.targetY > this.maxWorldY || this.targetY < this.minWorldY)
         {
             return this.world.getBlockAt(this.lastX, this.lastY, this.lastZ);
         }
@@ -367,6 +336,7 @@ public class RangeBlockHelper
 
     private void init(final Location location, final double range, final double step, final double viewHeight)
     {
+    	this.setWorldMinMaxY();
         this.playerLoc = location;
         this.viewHeight = viewHeight;
         this.playerX = this.playerLoc.getX();
@@ -388,5 +358,31 @@ public class RangeBlockHelper
         this.lastX = this.targetX;
         this.lastY = this.targetY;
         this.lastZ = this.targetZ;
+    }
+    
+    private void setWorldMinMaxY() {
+    	
+        /*
+         * The idea here is to: 
+         *  - get a reference to the the world field of the CraftWorld which implements org.bukkit.org
+         *  - it's private, so make it accessible
+         *  - Use it to retrieve a reference to the NMS world
+         *  - If CC is installed, this world should have gotten a getMinHeight method injected by the MixinWorld CC mixin, get that
+         *  - And call that getMinHeight method to get the minimum world height.
+         * 
+         */
+        try {
+            World bukkitWorld = this.world;
+            Field worldField = bukkitWorld.getClass().getDeclaredField("world");
+            worldField.setAccessible(true);
+            Object nmsWorld = worldField.get(bukkitWorld);
+            Method getMinHeight = nmsWorld.getClass().getMethod("getMinHeight");
+            Method getMaxHeight = nmsWorld.getClass().getMethod("getMaxHeight");
+            this.minWorldY = (Integer) getMinHeight.invoke(nmsWorld);
+            this.maxWorldY = (Integer) getMaxHeight.invoke(nmsWorld) - 1;
+            return;
+        } catch(Exception silenced) {} catch(Error silenced) {}
+        this.minWorldY = 0;
+        this.maxWorldY = 255;
     }
 }
